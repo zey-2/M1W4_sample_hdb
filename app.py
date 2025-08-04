@@ -565,12 +565,15 @@ if not filtered.empty:
         format_func=lambda i: f"{filtered.loc[i, 'town']} | {filtered.loc[i, 'block']} | ${filtered.loc[i, 'resale_price']:,}"
     )
     if compare_ids:
-        compare_cols = ['town','block','street_name','flat_type','floor_area_sqm','resale_price','lease_commence_date','hdb_age','mrt_name','pri_sch_name']
-        available_compare_cols = [col for col in compare_cols if col in filtered.columns]
-        
-        comparison_df = filtered.loc[compare_ids][available_compare_cols].T
-        comparison_df.columns = [f"Property {i+1}" for i in range(len(compare_ids))]
-        st.dataframe(comparison_df, use_container_width=True)
+        if len(compare_ids) >= 2:
+            compare_cols = ['town','block','street_name','flat_type','floor_area_sqm','resale_price','lease_commence_date','hdb_age','mrt_name','pri_sch_name']
+            available_compare_cols = [col for col in compare_cols if col in filtered.columns]
+
+            comparison_df = filtered.loc[compare_ids][available_compare_cols].T
+            comparison_df.columns = [f"Property {i+1}" for i in range(len(compare_ids))]
+            st.dataframe(comparison_df, use_container_width=True)
+        else:
+            st.info("Select at least two properties to compare")
     else:
         st.info("Select properties from the map or search results above to compare")
 else:
